@@ -1,0 +1,183 @@
+import json
+import os
+import re
+from datetime import datetime
+from pathlib import Path
+
+DATA_DIR = Path("data")
+CLIENTS_DIR = DATA_DIR / "clients"
+INDEX_FILE = DATA_DIR / "index.json"
+LOGS_DIR = Path("logs")
+QUERIES_LOG = LOGS_DIR / "queries.log"
+
+CLIENTS_DIR.mkdir(parents=True, exist_ok=True)
+LOGS_DIR.mkdir(parents=True, exist_ok=True)
+
+TEAM = ["@axanet-dev1", "@axanet-dev2"]
+
+def now():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+def normalize_name(name):
+    name = name.lower().strip()
+    name = re.sub(r"[^a-z0-9 ]", "", name)
+    name = re.sub(r"\s+", " ", name)
+    return name
+
+def slugify(name):
+    return normalize_name(name).replace(" ", "-")
+
+def load_index():
+    if INDEX_FILE.exists():
+        with open(INDEX_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
+
+def save_index(index):
+    with open(INDEX_FILE, "w", encoding="utf-8") as f:
+        json.dump(index, f, ensure_ascii=False, indent=2)
+
+def list_clients(index):
+    if not index:
+        print("No hay clientes registrados.")
+        return
+    print("\nLista de clientes:")
+    for name, file in index.items():
+        print(f"- {name} -> {file}")
+
+def create_client(index):
+    name = input("Nombre del cliente: ").strip()
+    if not name:
+        print("Nombre inválido.")
+        return
+
+    key = normalize_name(name)
+    if key in index:
+        print("El cliente ya existe.")
+        return
+
+    tipo = input("Tipo (Persona/Negocio): ").strip() or "Persona"
+    contacto = input("Contacto (opcional): ").strip() or "N/A"
+    servicio = input("Servicio solicitado: ").strip()
+    descripcion = input("Descripción del servicio: ").strip()
+
+    customer_id = datetime.now().strftime("%Y%m%d%H%M%S")
+    filename = f"{customer_id}_{slugify(name)}.json"
+
+    data = {
+        "id": customer_id,
+        "nombre": name,
+        "tipo": tipo,
+        "contacto": contacto,
+        "creado": now(),
+        "solicitudes": [{
+            "fecha": now(),
+            "servicio": servicio,
+            "descripcion": descripcion
+        }]
+    }
+
+    with open(CLIENTS_DIR / filename, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    index[key] = filename
+    save_index(index)
+    print("Cliente creado correctamente.")
+    print("Notificar a:", ", ".join(TEAM))
+
+def consult_client(index):
+    name = input("Nombre del cliente: ").strip()
+    key = normalize_name(name)
+
+    if key not in index:
+        print("Cliente no encontrado.")
+        return
+
+    with open(CLIENTS_DIR / index[key], "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    print(json.dumps(data, ensure_ascii=False, indent=2))
+
+    with open(QUERIES_LOG, "a", encoding="utf-8") as log:
+        log.write(f"{now()} CONSULTA {name}\n")
+
+    print("Consulta registrada.")
+    print("Notificar a:", ", ".join(TEAM))
+
+def update_client(index):
+    name = input("Nombre del cliente: ").strip()
+    key = normalize_name(name)
+
+    if key not in index:
+        print("Cliente no encontrado.")
+        return
+
+    path = CLIENTS_DIR / index[key]
+
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    servicio = input("Nuevo servicio: ").strip()
+    descripcion = input("Descripción del servicio: ").strip()
+
+    data["solicitudes"].append({
+        "fecha": now(),
+        "servicio": servicio,
+        "descripcion": descripcion
+    })
+
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    print("Cliente actualizado.")
+    print("Notificar a:", ", ".join(TEAM))
+
+def delete_client(index):
+    name = input("Nombre del cliente a borrar: ").strip()
+    key = normalize_name(name)
+
+    if key not in index:
+        print("Cliente no encontrado.")
+        return
+
+    os.remove(CLIENTS_DIR / index[key])
+    del index[key]
+    save_index(index)
+    print("Cliente eliminado.")
+    print("Notificar a:", ", ".join(TEAM))
+
+def main():
+    index = load_index()
+
+    while True:
+        print("\n--- AXANET GESTOR DE CLIENTES ---")
+        print("1) Listar clientes")
+        print("2) Consultar cliente")
+        print("3) Crear cliente")
+        print("4) Actualizar cliente")
+        print("5) Borrar cliente")
+        print("0) Salir")
+
+        option = input("Opción: ").strip()
+
+        if option == "1":
+            list_clients(index)
+        elif option == "2":
+            consult_client(index)
+        elif option == "3":
+            create_client(index)
+            index = load_index()
+        elif option == "4":
+            update_client(index)
+            index = load_index()
+        elif option == "5":
+            delete_client(index)
+            index = load_index()
+        elif option == "0":
+            print("Saliendo...")
+            break
+        else:
+            print("Opción inválida.")
+
+if __name__ == "__main__":
+    main()
