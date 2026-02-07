@@ -2,3 +2,4 @@ Solicitud de mejora: validar que el nombre no esté vacío y que no haya caracte
 Solicitado por: Atención al Cliente
 Prioridad: Media
 Fecha: hoy
+Estado: Pendiente
