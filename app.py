@@ -1,5 +1,3 @@
-#modificación de código para detonador
-
 import json
 import os
 import re
@@ -251,3 +249,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+Rename Code to app.py
