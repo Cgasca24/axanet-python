@@ -1,7 +1,8 @@
 name: 04 - Solicitud de mejora
 on:
-  issues:
-    types: [opened, labeled]
+  push:
+    paths:
+      - "logs/mejora_04.txt"
 
 jobs:
   notify:
