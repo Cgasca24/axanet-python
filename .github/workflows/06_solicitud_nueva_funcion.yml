@@ -1,7 +1,11 @@
 name: 06 - Solicitud de nueva función
+
 on:
   issues:
     types: [opened, labeled]
+  push:
+    paths:
+      - "logs/nueva_funcion_06.txt"
 
 jobs:
   notify:
@@ -13,7 +17,4 @@ jobs:
           echo "Solicitud de NUEVA FUNCIÓN detectada (Issue label: nueva-funcion)"
           echo "Título: ${{ github.event.issue.title }}"
           echo "Notificar a: DevA, DevB, IT1, IT2, Atención1, Atención2"
-on:
-  push:
-    paths:
-      - "logs/nueva_funcion.txt"
+
