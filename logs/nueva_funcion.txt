@@ -1,0 +1,4 @@
+Solicitud de nueva función: Exportar clientes a TXT
+Solicitado por: Atención al Cliente
+Prioridad: Alta
+Fecha: hoy
