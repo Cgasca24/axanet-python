@@ -1,4 +1,4 @@
-//cambiando algo del código//
+#modificación de código para detonador
 
 import json
 import os
