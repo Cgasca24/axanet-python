@@ -245,7 +245,7 @@ def main():
             print("Saliendo...")
             break
         else:
-            print("Opción inválida.")
+            print("Opción inválid.")
 
 if __name__ == "__main__":
     main()
