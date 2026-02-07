@@ -1,0 +1,15 @@
+name: 01 - Creación de nuevo cliente
+on:
+  push:
+    paths:
+      - "data/clients/**"
+      - "data/index.json"
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notificar a equipo
+        run: |
+          echo "✅ Creación/alta de cliente detectada"
+          echo "Notificar a: DevA, DevB, IT1, IT2, Atención1, Atención2"
