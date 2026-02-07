@@ -13,3 +13,7 @@ jobs:
           echo "Solicitud de NUEVA FUNCIÓN detectada (Issue label: nueva-funcion)"
           echo "Título: ${{ github.event.issue.title }}"
           echo "Notificar a: DevA, DevB, IT1, IT2, Atención1, Atención2"
+on:
+  push:
+    paths:
+      - "logs/nueva_funcion.txt"
