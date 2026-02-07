@@ -1,4 +1,5 @@
 name: 04 - Solicitud de mejora
+
 on:
   push:
     paths:
@@ -7,10 +8,8 @@ on:
 jobs:
   notify:
     runs-on: ubuntu-latest
-    if: contains(join(github.event.issue.labels.*.name, ','), 'mejora')
     steps:
       - name: Notificar a equipo
         run: |
-          echo "Solicitud de MEJORA detectada (Issue label: mejora)"
-          echo "Título: ${{ github.event.issue.title }}"
+          echo "Solicitud de MEJORA detectada (por archivo logs/mejora_04.txt)"
           echo "Notificar a: DevA, DevB, IT1, IT2, Atención1, Atención2"
