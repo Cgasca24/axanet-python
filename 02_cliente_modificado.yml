@@ -10,5 +10,5 @@ jobs:
     steps:
       - name: Notificar a equipo
         run: |
-          echo "✏️ Modificación de cliente detectada"
+          echo "Modificación de cliente detectada"
           echo "Notificar a: DevA, DevB, IT1, IT2, Atención1, Atención2"
