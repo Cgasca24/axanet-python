@@ -1,3 +1,5 @@
+#cambiando algo del código
+
 import json
 import os
 import re
@@ -245,7 +247,7 @@ def main():
             print("Saliendo...")
             break
         else:
-            print("Opción inválid.")
+            print("Opción inválida.")
 
 if __name__ == "__main__":
     main()
