@@ -1,0 +1,15 @@
+name: 06 - Solicitud de nueva función
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: contains(join(github.event.issue.labels.*.name, ','), 'nueva-funcion')
+    steps:
+      - name: Notificar a equipo
+        run: |
+          echo "Solicitud de NUEVA FUNCIÓN detectada (Issue label: nueva-funcion)"
+          echo "Título: ${{ github.event.issue.title }}"
+          echo "Notificar a: DevA, DevB, IT1, IT2, Atención1, Atención2"
